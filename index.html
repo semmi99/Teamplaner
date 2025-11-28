@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlanMaster Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- html2pdf.js for direct download capability -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                900: '#1e3a8a',
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      /* --- PRINT SYSTEM STYLES --- */
+
+      /* 1. Default State: Screen */
+      #print-mount {
+        display: none; /* Hide print view on screen */
+      }
+
+      /* 2. State: Printing Active (triggered via JS class) */
+      /* This is the reliable switch mechanism */
+      body.is-printing #root {
+        display: none !important; /* Hide App */
+      }
+      body.is-printing #print-mount {
+        display: block !important; /* Show Print View */
+      }
+
+      /* 3. Media Print Fallback (CMD+P) */
+      @media print {
+        #root { display: none !important; }
+        #print-mount { display: block !important; }
+        
+        /* Ensure Tailwind's print:hidden works inside our custom container */
+        .print\:hidden {
+          display: none !important;
+        }
+        
+        @page {
+          size: A4 landscape;
+          margin: 10mm;
+        }
+        
+        body {
+          margin: 0;
+          padding: 0;
+          background: white;
+          width: 100%;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        
+        /* Utility for Page Breaks */
+        .break-after-page {
+          page-break-after: always;
+          break-after: page;
+        }
+
+        /* Print Layout Rules */
+        .print-layout {
+          width: 100%;
+          display: block;
+        }
+        
+        .print-group-card {
+          break-inside: avoid;
+          page-break-inside: avoid;
+          display: block;
+          width: 100%;
+          margin-bottom: 2rem;
+          border: 1px solid #94a3b8;
+          background: white;
+        }
+        
+        /* Typography & Colors for Print */
+        * {
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3 { color: #000 !important; }
+        p, td, th { color: #000 !important; }
+        
+        /* Table Styles */
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 10pt;
+          page-break-inside: auto;
+        }
+        
+        tr {
+          page-break-inside: avoid;
+          page-break-after: auto;
+        }
+        
+        th {
+          background-color: #f1f5f9 !important;
+          border-bottom: 2px solid #000;
+          padding: 8px;
+          text-align: left;
+          font-weight: 700;
+        }
+        
+        td {
+          border-bottom: 1px solid #cbd5e1;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even) td {
+          background-color: #f8fafc !important;
+        }
+      }
+      
+      /* Screen Scrollbar */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #f1f5f9; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-slate-50 text-slate-900 antialiased">
+    <div id="root"></div>
+    <!-- Dedicated Print Mount Point -->
+    <div id="print-mount"></div>
+  </body>
+</html>
